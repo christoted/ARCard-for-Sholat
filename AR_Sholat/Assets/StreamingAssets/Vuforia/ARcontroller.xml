@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="open-doodles-roller-skating" size="0.100000 0.074815" />
+    <ImageTarget name="open-doodles-dancing" size="0.100000 0.084680" />
+    <ImageTarget name="open-doodles-bikini" size="0.100000 0.080637" />
+    <ImageTarget name="open-doodles-ballets" size="0.100000 0.087189" />
+    <ImageTarget name="234050" size="0.060000 0.038417" />
+    <ImageTarget name="229904" size="0.060000 0.037587" />
+  </Tracking>
+</QCARConfig>
