@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Vuforia;
 
 public class MarkerHandler : MonoBehaviour, ITrackableEventHandler
-{
-    [SerializeField]
-    private Text debugText;
-    
+{   
     [SerializeField]    
     private AudioSource audioSource;
     [SerializeField]        
@@ -43,11 +39,9 @@ public class MarkerHandler : MonoBehaviour, ITrackableEventHandler
         
     }
 
-    private void Update(){
-        debugText.text =  isFound + " " + clipnumber + " yeah";
+    private void Update(){        
         if(!isFound) return;
 
-        
         if (!audioSource.isPlaying) {
             audioSource.clip = audioClips[clipnumber];            
             audioSource.Play();
@@ -63,16 +57,19 @@ public class MarkerHandler : MonoBehaviour, ITrackableEventHandler
             "scale", scaling
         ));      
         
-        
+        clipnumber = 0;
         isFound = true;
-        animator.speed = 1;
         
+        // animator.speed = 1;
+        animator.Play("start");
     }
 
     private void OnTrackingLost(){
         isFound = false;
-        audioSource.Pause();        
-        animator.speed = 0;
+        audioSource.Stop();
+        
+        // audioSource.Pause();        
+        // animator.speed = 0;
     }
 
 }
