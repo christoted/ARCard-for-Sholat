@@ -8,27 +8,64 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 {
     public Text debugText;
     
-    [SerializeField]
-    private AnimationClip[] animations;
-    [SerializeField]
-    private int[] frameStart, frameEnd;
+    [SerializeField] private AnimationClip[] animations;
+    [SerializeField] private int[] frameStart, frameEnd;
+    [SerializeField] private AudioClip[] audios;    
+    [SerializeField] private int[] loopingAudio;
 
+    private int curAnim = 0, numLoop;
+    private bool isTracked = false;
+    private float nextAnim, curNextAnim;
     private Animator anim;
+    private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
     void Start()
     {
-        
-
         anim = transform.GetComponent<Animator>();    
+        audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
         if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);    
-        debugText.text = getFrame(animations[0]) + "";
+        
+        
     }
 
     
     void Update()
     {
+        if(!isTracked) return;
         
+        if (loopingAudio[curAnim] == 0){
+            //AGAR DIA HANYA DI RUN SEKALI
+            if (nextAnim > Time.time) return;            
+            anim.Play(animations[curAnim].name, 0, getNT(curAnim));
+            audioSource.clip = audios[curAnim];
+            audioSource.Play();
+            nextAnim = Time.time + ((float)(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+            Invoke("PlayNextAnim",(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+        } else {
+            //LOOPING SELAMA AUDIO JALAN X KALI
+            if (!audioSource.isPlaying){
+                if (numLoop == 0){
+                    Invoke("PlayNextAnim",0);                    
+                } else {
+                    numLoop--;
+                    audioSource.clip = audios[curAnim];
+                    audioSource.Play();
+                }
+            } 
+            // ANIMASI LOOPING SAMPAI AUDIO SELESAI
+            if (curNextAnim < Time.time){                
+                curNextAnim = Time.time + ((float)(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+                anim.Play(animations[curAnim].name, 0, getNT(curAnim));
+            }
+
+        }
+    }
+
+    private void PlayNextAnim(){
+        curAnim = (curAnim+1) % animations.Length;
+        numLoop = loopingAudio[curAnim];
+        nextAnim = curNextAnim = Time.time;
     }
 
     public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
@@ -48,18 +85,15 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     }
     private void OnTrackingFound(){
         // anim.Play(animations[0].name,0,0.5F);    
-        PlayAnim();
+        // PlayAnim();
+        curAnim = 0;
+        isTracked = true;
+        nextAnim = curNextAnim = Time.time;
     }
 
     private void OnTrackingLost(){
-
-    }
-
-    private void PlayAnim(){
-        
-        // for(int )
-        anim.Play(animations[0].name, 0, getNT(0));
-        Invoke("PlayAnim", (frameEnd[0]-frameStart[0]) / 25);
+        isTracked = false;
+        audioSource.Stop();
     }
 
     private int getFrame(AnimationClip ac){
@@ -71,7 +105,6 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     }
 
     private float getNT(int id){
-
         int totalFrame = getFrame(animations[id]);
         return (float)frameStart[id]/totalFrame;
     }
