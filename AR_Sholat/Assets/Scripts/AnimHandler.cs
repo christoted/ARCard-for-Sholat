@@ -41,7 +41,7 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             audioSource.clip = audios[curAnim];
             audioSource.Play();
             nextAnim = Time.time + ((float)(frameEnd[curAnim]-frameStart[curAnim]) / 25);
-            Invoke("PlayNextAnim",(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+            Invoke("PlayNextAnim",((float)frameEnd[curAnim]-frameStart[curAnim]) / 25);
         } else {
             //LOOPING SELAMA AUDIO JALAN X KALI
             if (!audioSource.isPlaying){
