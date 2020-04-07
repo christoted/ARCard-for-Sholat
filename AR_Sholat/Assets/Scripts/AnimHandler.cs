@@ -14,8 +14,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     [SerializeField] private int[] loopingAudio;
 
     private int curAnim = 0, numLoop;
-    private bool isTracked = false;
-    private float nextAnim, curNextAnim;
+    private bool isTracked = false, isFinished;
+    private float curNextAnim;
     private Animator anim;
     private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
@@ -24,23 +24,26 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         anim = transform.GetComponent<Animator>();    
         audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
-        if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);    
-        
-        
+        if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);                    
     }
 
     
     void Update()
     {
         if(!isTracked) return;
-        
+                
+        // debugText.text = Time.time + " " + nextAnim;
+
         if (loopingAudio[curAnim] == 0){
             //AGAR DIA HANYA DI RUN SEKALI
-            if (nextAnim > Time.time) return;            
-            anim.Play(animations[curAnim].name, 0, getNT(curAnim));
+            if (isFinished) return;            
+            isFinished = true;
+            
+            anim.Play(animations[curAnim].name, 0, getNT(curAnim));            
             audioSource.clip = audios[curAnim];
             audioSource.Play();
-            nextAnim = Time.time + ((float)(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+            
+            
             Invoke("PlayNextAnim",((float)frameEnd[curAnim]-frameStart[curAnim]) / 25);
         } else {
             //LOOPING SELAMA AUDIO JALAN X KALI
@@ -55,7 +58,7 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             } 
             // ANIMASI LOOPING SAMPAI AUDIO SELESAI
             if (curNextAnim < Time.time){                
-                curNextAnim = Time.time + ((float)(frameEnd[curAnim]-frameStart[curAnim]) / 25);
+                curNextAnim = Time.time + (((float)frameEnd[curAnim]-frameStart[curAnim]) / 25);
                 anim.Play(animations[curAnim].name, 0, getNT(curAnim));
             }
 
@@ -65,7 +68,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     private void PlayNextAnim(){
         curAnim = (curAnim+1) % animations.Length;
         numLoop = loopingAudio[curAnim];
-        nextAnim = curNextAnim = Time.time;
+        curNextAnim = Time.time;
+        isFinished = false;
+        audioSource.Stop();
     }
 
     public void OnTrackableStateChanged(TrackableBehaviour.Status previousStatus, TrackableBehaviour.Status newStatus)
@@ -84,11 +89,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         
     }
     private void OnTrackingFound(){
-        // anim.Play(animations[0].name,0,0.5F);    
-        // PlayAnim();
         curAnim = 0;
         isTracked = true;
-        nextAnim = curNextAnim = Time.time;
+        curNextAnim = Time.time;
     }
 
     private void OnTrackingLost(){
