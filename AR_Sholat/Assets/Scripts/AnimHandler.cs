@@ -6,7 +6,7 @@ using Vuforia;
 
 public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 {
-    public Text debugText;
+   // public Text debugText;
     
     [SerializeField] private AnimationClip[] animations;
     [SerializeField] private int[] frameStart, frameEnd;
