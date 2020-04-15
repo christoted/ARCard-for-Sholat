@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="doa_sesudah_sholat" size="5.000000 8.377143" />
+    <ImageTarget name="salam" size="5.000000 8.377143" />
+    <ImageTarget name="tahiyat_akhir" size="5.000000 8.377143" />
+    <ImageTarget name="tahiyat_awal" size="5.000000 8.377143" />
+    <ImageTarget name="duduk_dua_sujud" size="5.000000 8.371428" />
+    <ImageTarget name="sujud" size="5.000000 8.371428" />
+    <ImageTarget name="itidal" size="5.000000 8.371428" />
+    <ImageTarget name="ruku" size="5.000000 8.371428" />
+    <ImageTarget name="an_naas" size="5.000000 8.377143" />
+    <ImageTarget name="al_falaq" size="5.000000 8.377143" />
+    <ImageTarget name="al_ikhlas" size="5.000000 8.377143" />
+    <ImageTarget name="al_fatihah" size="5.000000 8.377143" />
+    <ImageTarget name="doa_iftitah" size="5.000000 8.371428" />
+    <ImageTarget name="takbiratul_ihram" size="5.000000 8.371428" />
+    <ImageTarget name="sholat_isya" size="5.000000 8.371428" />
+    <ImageTarget name="sholat_maghrib" size="5.000000 8.371428" />
+    <ImageTarget name="sholat_ashar" size="5.000000 8.377143" />
+    <ImageTarget name="sholat_dzuhur" size="5.000000 8.377143" />
+    <ImageTarget name="sholat_subuh" size="5.000000 8.377143" />
+    <ImageTarget name="iqomah" size="5.000000 8.377143" />
+    <ImageTarget name="doa_setelah_adzan" size="5.000000 8.377143" />
+    <ImageTarget name="adzan" size="5.000000 8.377143" />
+    <ImageTarget name="doa_setelah_wudhu" size="5.000000 8.377143" />
+  </Tracking>
+</QCARConfig>
