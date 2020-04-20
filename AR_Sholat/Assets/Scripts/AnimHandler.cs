@@ -16,7 +16,7 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 
     private int curAnim = 0, numLoop;
     private bool isTracked = false, isFinished, isPaused = false;
-    private float NextAnimCD, NextSameAnimCD;
+    private float NextAnimCD;
     private Animator anim;
     private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
@@ -27,21 +27,16 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
         if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);                    
-
-        GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(Play);
-        GameObject.Find("PauseButton").GetComponent<Button>().onClick.AddListener(Pause);
-        
-        // GameObject.Find("/Canvas/Play").GetComponent<Button>().onClick.AddListener(Play);
-        // GameObject.Find("/Canvas/Pause").GetComponent<Button>().onClick.AddListener(Pause);
-        // GameObject.Find("Play").GetComponent<Button>().onClick.AddListener(Play);
-        // buttonPause.GetComponent<Button>().onClick.AddListener(Pause);
     }   
 
     
     void Update()
     {
+        // debugText.text =  Time.deltaTime  + " " + isPaused;
         if(!isTracked) return;
         if (isPaused) return;    
+
+        
 
         if (loopingAudio[curAnim] == 0){
             //AGAR DIA HANYA DI RUN SEKALI
@@ -71,10 +66,11 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
                 }
             } 
             // ANIMASI LOOPING SAMPAI AUDIO SELESAI
-            NextSameAnimCD -= Time.deltaTime;
+            NextAnimCD -= Time.deltaTime;
+            // debugText.text = NextSameAnimCD;
             if (NextAnimCD < 0){                                
                 anim.Play(animations[curAnim].name, 0, getNT(curAnim));
-                NextSameAnimCD = (((float)frameEnd[curAnim]-frameStart[curAnim]) / 25);
+                NextAnimCD = ((float)frameEnd[curAnim]-frameStart[curAnim]) / 25;
             }
 
         }
@@ -82,10 +78,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 
     private void PlayNextAnim(){
         curAnim++;
-        debugText.text = curAnim + "";
         if (curAnim < animations.Length) numLoop = loopingAudio[curAnim];
-        else Pause();
-        NextSameAnimCD = 0;
+        else Paused();
+        NextAnimCD = 0;
         isFinished = false;
         audioSource.Stop();
     }
@@ -98,6 +93,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
         {        
             OnTrackingFound();            
+            GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(Played);
+            GameObject.Find("PauseButton").GetComponent<Button>().onClick.AddListener(Paused);
         }
         else
         {            
@@ -110,9 +107,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         numLoop = loopingAudio[curAnim];
         isTracked = true;
         isPaused = false;
-        isFinished = false;
-        
-        NextAnimCD = 0;
+        anim.speed = 1;
+        isFinished = false;    
+        NextAnimCD = 0;        
     }
 
     private void OnTrackingLost(){
@@ -133,7 +130,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         return (float)frameStart[id]/totalFrame;
     }
 
-    private void Play(){
+
+    private void Played(){
         if (!isPaused) return;
         isPaused = false;
         if (curAnim == animations.Length) {
@@ -145,11 +143,12 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         anim.speed = 1;
     }
 
-    private void Pause(){
+    private void Paused(){
         if (isPaused) return;
         isPaused = true;
         audioSource.Pause();
-        debugText.text = "Pause";
-        anim.speed = 0;
+        
+        anim.speed = 0F;
+        debugText.text = isPaused + " " + anim.speed;
     }
 }
