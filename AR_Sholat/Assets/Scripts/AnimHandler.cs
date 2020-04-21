@@ -20,13 +20,21 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     private Animator anim;
     private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
+
+    GameObject btnPlay,btnPause;
+    
+    
     
     void Start()
     {
         anim = transform.GetComponent<Animator>();    
         audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
-        if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);                    
+        if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);
+
+        btnPlay = GameObject.Find("PlayButton");
+        btnPause = GameObject.Find("PauseButton");
+
     }   
 
     
@@ -92,9 +100,18 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             newStatus == TrackableBehaviour.Status.TRACKED ||
             newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
         {        
-            OnTrackingFound();            
-            GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(Played);
-            GameObject.Find("PauseButton").GetComponent<Button>().onClick.AddListener(Paused);
+                OnTrackingFound();       
+            
+           
+                GameObject.Find("PlayButton").GetComponent<Button>().onClick.AddListener(Played);
+         
+        
+            
+                GameObject.Find("PauseButton").GetComponent<Button>().onClick.AddListener(Paused);
+          
+            
+            
+            
         }
         else
         {            
@@ -138,6 +155,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             curAnim = 0;
             numLoop = loopingAudio[curAnim];
         }
+        btnPlay.SetActive(false);
+        btnPause.SetActive(true);
         audioSource.Play();        
         debugText.text = "Play";
         anim.speed = 1;
@@ -147,8 +166,10 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         if (isPaused) return;
         isPaused = true;
         audioSource.Pause();
-        
+        btnPlay.SetActive(true);
+        btnPause.SetActive(false);
         anim.speed = 0F;
-        debugText.text = isPaused + " " + anim.speed;
+      //  debugText.text = isPaused + " " + anim.speed;
+        debugText.text = "Pause" ;
     }
 }
