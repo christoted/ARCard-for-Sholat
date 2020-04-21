@@ -21,7 +21,7 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
 
-    GameObject btnPlay,btnPause;
+    [SerializeField] private GameObject btnPlay,btnPause;
     
     
     
@@ -31,16 +31,11 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
         if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);
-
-        btnPlay = GameObject.Find("PlayButton");
-        btnPause = GameObject.Find("PauseButton");
-
     }   
 
     
     void Update()
-    {
-        // debugText.text =  Time.deltaTime  + " " + isPaused;
+    {        
         if(!isTracked) return;
         if (isPaused) return;    
     
@@ -71,7 +66,6 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             } 
             // ANIMASI LOOPING SAMPAI AUDIO SELESAI
             NextAnimCD -= Time.deltaTime;
-            // debugText.text = NextSameAnimCD;
             if (NextAnimCD < 0){                                
                 anim.Play(animations[curAnim].name, 0, getNT(curAnim));
                 NextAnimCD = ((float)frameEnd[curAnim]-frameStart[curAnim]) / 25;
@@ -96,9 +90,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
             newStatus == TrackableBehaviour.Status.TRACKED ||
             newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
         {        
-                OnTrackingFound();                              
-                btnPlay.GetComponent<Button>().onClick.AddListener(Played);                             
-                btnPause.GetComponent<Button>().onClick.AddListener(Paused);                                              
+            OnTrackingFound();                                                    
+            btnPlay.GetComponent<Button>().onClick.AddListener(Played);                             
+            btnPause.GetComponent<Button>().onClick.AddListener(Paused);                                              
         }
         else
         {            
@@ -107,6 +101,7 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         
     }
     private void OnTrackingFound(){
+        
         isTracked = true;
         isPaused = false;
         curAnim = 0;
@@ -115,11 +110,41 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         anim.speed = 1;
         isFinished = false;    
         NextAnimCD = 0;        
+        
+        btnPause.SetActive(true);
     }
 
     private void OnTrackingLost(){
         isTracked = false;
         audioSource.Stop();
+        
+        btnPause.SetActive(false);
+        btnPlay.SetActive(false);
+    }
+
+
+
+    private void Played(){
+        if (!isPaused) return;
+        isPaused = false;
+        if (curAnim == animations.Length) {
+            curAnim = 0;
+            numLoop = loopingAudio[curAnim];
+        }        
+        audioSource.Play();                
+        anim.speed = 1;
+        
+        btnPlay.SetActive(false);
+        btnPause.SetActive(true);        
+    }
+
+    private void Paused(){
+        if (isPaused) return;
+        isPaused = true;
+        audioSource.Pause();        
+        anim.speed = 0F;
+        btnPlay.SetActive(true);
+        btnPause.SetActive(false);        
     }
 
     private int getFrame(AnimationClip ac){
@@ -135,29 +160,4 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         return (float)frameStart[id]/totalFrame;
     }
 
-
-    private void Played(){
-        if (!isPaused) return;
-        isPaused = false;
-        if (curAnim == animations.Length) {
-            curAnim = 0;
-            numLoop = loopingAudio[curAnim];
-        }        
-        audioSource.Play();                
-        anim.speed = 1;
-        btnPlay.SetActive(false);
-        btnPause.SetActive(true);
-        // debugText.text = "Play";
-    }
-
-    private void Paused(){
-        if (isPaused) return;
-        isPaused = true;
-        audioSource.Pause();        
-        anim.speed = 0F;
-        btnPlay.SetActive(true);
-        btnPause.SetActive(false);    
-      //  debugText.text = isPaused + " " + anim.speed;
-        // debugText.text = "Pause" ;
-    }
 }
