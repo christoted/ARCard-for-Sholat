@@ -22,7 +22,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     protected TrackableBehaviour trackableBehavior;
 
     [SerializeField] private GameObject btnPlay,btnPause;
-    
+
+
     
     
     void Start()
@@ -31,11 +32,22 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         audioSource = transform.GetComponent<AudioSource>();
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
         if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);
+
+
     }   
 
-    
+   
+
+   
     void Update()
-    {        
+    {
+
+
+        if ( Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if(!isTracked) return;
         if (isPaused) return;    
     
