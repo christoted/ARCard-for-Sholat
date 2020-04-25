@@ -21,6 +21,8 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
     private AudioSource audioSource;
     protected TrackableBehaviour trackableBehavior;
 
+    private string key_token = "TOKEN";
+
     [SerializeField] private GameObject btnPlay,btnPause;
 
 
@@ -33,7 +35,6 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         trackableBehavior = GetComponentInParent<TrackableBehaviour>();
         if (trackableBehavior) trackableBehavior.RegisterTrackableEventHandler(this);
 
-
     }   
 
    
@@ -41,12 +42,14 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
    
     void Update()
     {
-
-
-        if ( Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
+        if (!PlayerPrefs.HasKey(key_token)) {
+            TrackerManager.Instance.GetTracker<ObjectTracker>().Stop();
+            return;
+        } else {
+            TrackerManager.Instance.GetTracker<ObjectTracker>().Start();
         }
+
+        Debug.Log("masuk");
 
         if(!isTracked) return;
         if (isPaused) return;    
