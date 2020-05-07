@@ -6,7 +6,7 @@ using Vuforia;
 
 public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 {
-    public Text debugText;
+    // public Text debugText;
     
     [SerializeField] private AnimationClip[] animations;
     [SerializeField] private int[] frameStart, frameEnd;
@@ -145,10 +145,9 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
         if (curAnim == animations.Length) {
             curAnim = 0;
             numLoop = loopingAudio[curAnim];
-        }        
-        audioSource.Play();                
+        }     
+        if (audioSource.time > 0)  audioSource.Play();               
         anim.speed = 1;
-        
         btnPlay.SetActive(false);
         btnPause.SetActive(true);        
     }
