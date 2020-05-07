@@ -26,15 +26,14 @@ public class UIHandler : MonoBehaviour
         }
 
         buttonSubmit.GetComponent<Button>().onClick.AddListener(Submit);
-        buttonLogOut.GetComponent<Button>().onClick.AddListener(Logout);
+        buttonLogOut.GetComponent<Button>().onClick.AddListener(Logout);    
+    }
 
+    private void Update(){
         if ( Input.GetKeyDown(KeyCode.Escape)){
             Application.Quit();
         }
-
     }
-
-    
 
 
     private void Submit(){
@@ -42,7 +41,7 @@ public class UIHandler : MonoBehaviour
         Invoke("EnableButton",2);
 
 
-        Text serial_number_text = canvasRegister.transform.Find("Canvas/InputField/Text").GetComponent<Text>();
+        Text serial_number_text = canvasRegister.transform.Find("InputField/Text").GetComponent<Text>();
         string serial_number = serial_number_text.text;
         if (serial_number.Length > 11){
             
