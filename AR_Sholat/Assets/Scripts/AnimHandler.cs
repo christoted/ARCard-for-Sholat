@@ -37,7 +37,6 @@ public class AnimHandler : MonoBehaviour, ITrackableEventHandler
 
     }   
 
-   
 
    
     void Update()

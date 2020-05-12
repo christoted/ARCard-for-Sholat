@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="doa_qunut" size="40.000000 66.971428" />
+    <ImageTarget name="wudhu" size="40.000000 67.017143" />
     <ImageTarget name="doa_sesudah_sholat" size="5.000000 8.377143" />
     <ImageTarget name="salam" size="5.000000 8.377143" />
     <ImageTarget name="tahiyat_akhir" size="5.000000 8.377143" />
